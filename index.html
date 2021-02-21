@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>2Vault</title>
+</head>
+<body>
+
+<h3>Background</h3>
+<p>This sample shows how the Fetch API can make POST requests.</p>
+
+<textarea autofocus id="vault" cols="80" rows="10">
+</textarea>
+<p><button>Create Vault</button></p>
+
+<script>
+
+    function submitVault(){
+        postForm('http://localhost:8080/2vault')
+            .then(data => console.log(data))
+            .catch(error => console.error(error))
+    }
+
+    function postForm(url) {
+        const formData = document.querySelector('textarea').value
+        console.log(formData)
+
+        return fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({"text": formData})
+        }).then(response => response.json())
+    }
+
+    var submitBtn = document.querySelector('button');
+    submitBtn.addEventListener('click', submitVault);
+</script>
+
+</body>
+</html>
