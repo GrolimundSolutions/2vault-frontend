@@ -1,42 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta charset="UTF-8">
     <title>2Vault</title>
 </head>
 <body>
+<div class="container">
+    <h3>PlainText to Vault</h3>
+    <p>This simple form create an Ansible Vault from the PlanText field.</p>
 
-<h3>Background</h3>
-<p>This sample shows how the Fetch API can make POST requests.</p>
+    <div class="form-group">
+        <textarea autofocus class="form-control" id="vault" rows="10" placeholder="Enter Plaintext"></textarea>
+    </div>
 
-<textarea autofocus id="vault" cols="80" rows="10">
-</textarea>
-<p><button>Create Vault</button></p>
+    <div class="form-group">
+        <button class="btn btn-primary" type="button">Create Vault</button>
+    </div>
 
+    <div class="form-group">
+        <textarea class="form-control" id="result" readonly rows="10" placeholder="Returns Ansible Vault"></textarea>
+    </div>
+
+</div>
 <script>
 
-    function submitVault(){
-        postForm('http://localhost:8080/2vault')
-            .then(data => console.log(data))
-            .catch(error => console.error(error))
-    }
-
-    function postForm(url) {
+    function submitVault() {
         const formData = document.querySelector('textarea').value
         console.log(formData)
 
-        return fetch(url, {
+        const data = {text: formData, secret: ""};
+
+        fetch('http://localhost:8080/2vault', {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"text": formData})
-        }).then(response => response.json())
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById('result').value = data.secret
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
-    var submitBtn = document.querySelector('button');
+    let submitBtn = document.querySelector('button');
     submitBtn.addEventListener('click', submitVault);
 </script>
 
