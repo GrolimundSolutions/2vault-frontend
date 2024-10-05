@@ -19,6 +19,7 @@ function submitVault() {
         })
         .catch((error) => {
             console.error('Error:', error);
+            document.getElementById('result').value = error
         });
 }
 
